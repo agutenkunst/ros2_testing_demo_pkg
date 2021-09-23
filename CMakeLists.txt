@@ -43,7 +43,7 @@ if(BUILD_TESTING)
   ament_add_gtest(unittest_gtest test/unittest_gtest.cpp) #Macro provided by https://github.com/ament/ament_cmake/blob/84719051ef2b26070de484e60b8f060ae7a70b06/ament_cmake_gtest/cmake/ament_add_gtest.cmake#L52
   target_link_libraries(unittest_gtest)
 
-  # Unit test for ServoCalcs
+  # Integrationtest using gtest (see https://github.com/ros-planning/moveit2/blob/main/moveit_ros/moveit_servo/CMakeLists.txt)
   ament_add_gtest_executable( #Macro provided by https://github.com/ament/ament_cmake/blob/84719051ef2b26070de484e60b8f060ae7a70b06/ament_cmake_gtest/cmake/ament_add_gtest_executable.cmake#L34
     integrationtest_gtest
     test/integrationtest_gtest.cpp

@@ -31,5 +31,8 @@ https://github.com/ros2/launch/issues/466#issuecomment-715372369
 https://roscon.ros.org/2019/talks/roscon2019_launch_testing_presentation.pdf
 https://github.com/ros2/launch_ros/blob/master/launch_testing_ros/test/examples/talker_listener_launch_test.py
 
+Writing Integrationtests
+https://github.com/ros-planning/moveit2/blob/main/moveit_ros/moveit_servo/CMakeLists.txt
+
 ## Relevant issues
 https://github.com/ros2/rcutils/issues/204
