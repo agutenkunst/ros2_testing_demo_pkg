@@ -12,8 +12,8 @@
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
   <test_depend>ros_testing</test_depend>
-  <test_depend>ament-cmake-test</test_depend>
-  <test_depend>ament-cmake-gtest</test_depend>
+  <test_depend>ament_cmake_test</test_depend>
+  <test_depend>ament_cmake_gtest</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
