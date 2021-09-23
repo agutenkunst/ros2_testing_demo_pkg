@@ -52,6 +52,14 @@ if(BUILD_TESTING)
   ament_target_dependencies(integrationtest_gtest)
   add_ros_test(test/integrationtest_gtest.test.py ARGS "test_binary_dir:=${CMAKE_CURRENT_BINARY_DIR}") #TODO arg needed? # macro provided by https://github.com/ros2/ros_testing/blob/4d5cf881e59c93821a439262cdea5ee961593d21/ros_testing/cmake/add_ros_test.cmake#L61
 
+  install(FILES
+    test/integrationtest_unittest.py # I guess there is a better way
+    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/test
+    PERMISSIONS OWNER_READ OWNER_EXECUTE
+  )
+  add_ros_test(test/integrationtest_unittest.test.py ARGS "test_binary_dir:=${CMAKE_CURRENT_BINARY_DIR}/test") #TODO arg needed? # macro provided by https://github.com/ros2/ros_testing/blob/4d5cf881e59c93821a439262cdea5ee961593d21/ros_testing/cmake/add_ros_test.cmake#L61
+
+
   # find_package(ament_lint_auto REQUIRED) TODO USAGE
   # the following line skips the linter which checks for copyrights
   # uncomment the line when a copyright and license is not present in all source files
