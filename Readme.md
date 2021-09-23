@@ -1,9 +1,20 @@
 # ROS2 testing demo
 
+This packages is create while learning how to write tests for ROS2.
+
+So far it contains the following types of tests
+
+- A unittest based on gtest (unittest_gtest.cpp)
+- An integrationtest (launch based) using gtest (integrationtest_gtest.*)
+
 ## Usage
 Run unittest and integrationtest
 ```
 colcon build && colcon test && colcon test-result
+```
+to have more verbose output
+```
+colcon build && colcon test --event-handlers console_direct+ && colcon test-result
 ```
 
 ### Run single integrationtest
