@@ -12,7 +12,7 @@ import rclpy
 
 class TestSum(unittest.TestCase):
     def test_demo(self):
-        self.assertTrue(False)
+        self.assertTrue(True)
 
 def main(args=None):
     sys.argv = [sys.argv[0]]

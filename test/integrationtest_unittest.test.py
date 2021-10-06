@@ -3,6 +3,7 @@ import unittest
 import launch
 import launch_ros
 import launch_testing
+import launch_testing.asserts
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
 import pytest
@@ -22,10 +23,18 @@ def generate_test_description():
         # other fixture actions
         test_node,
         launch_testing.actions.ReadyToTest(),
-    ])
+    ]), locals()
+
+class TestShutdown(unittest.TestCase):
+
+    def test_shutdown(self, test_node, proc_info):
+        """Test that the executable under test terminates after a finite amount of time."""
+        proc_info.assertWaitForShutdown(process=test_node, timeout=10)
 
 @launch_testing.post_shutdown_test()
 class TestOutcome(unittest.TestCase):
 
-    def test_exit_codes(self, proc_info):
-        launch_testing.asserts.assertExitCodes(proc_info)
+    def test_exit_codes(self, test_node, proc_info):
+        launch_testing.asserts.assertExitCodes(proc_info,
+                                               [launch_testing.asserts.EXIT_OK],
+                                               test_node)
