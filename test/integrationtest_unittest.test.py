@@ -1,4 +1,6 @@
 import unittest
+import sys
+import os
 
 import launch
 import launch_ros
@@ -8,10 +10,16 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
 import pytest
 
+from launch_testing.asserts.assert_exit_codes import EXIT_OK
+
 @pytest.mark.rostest
 def generate_test_description():
-    test_node = launch_ros.actions.Node(
-        executable=PathJoinSubstitution([LaunchConfiguration('test_binary_dir'), 'integrationtest_unittest.py']),
+    path_to_test = os.path.dirname(__file__)
+
+    test_node = launch_ros.actions.Node(# see https://github.com/ros2/launch_ros/blob/999b208a05998a83378f7ba273b8146ea3eb09d9/launch_testing_ros/test/examples/talker_listener_launch_test.py
+        executable=sys.executable,
+        arguments=[os.path.join(path_to_test, 'integrationtest_unittest.py')],
+        additional_env={'PYTHONUNBUFFERED': '1'},
         parameters=[],
         output='screen',
     )
@@ -35,6 +43,4 @@ class TestShutdown(unittest.TestCase):
 class TestOutcome(unittest.TestCase):
 
     def test_exit_codes(self, test_node, proc_info):
-        launch_testing.asserts.assertExitCodes(proc_info,
-                                               [launch_testing.asserts.EXIT_OK],
-                                               test_node)
+        launch_testing.asserts.assertExitCodes(proc_info, process=test_node, allowable_exit_codes=[EXIT_OK])

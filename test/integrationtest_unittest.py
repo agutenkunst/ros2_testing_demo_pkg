@@ -9,9 +9,11 @@ import sys
 
 import unittest
 import rclpy
+import time
 
 class TestSum(unittest.TestCase):
     def test_demo(self):
+        time.sleep(5)
         self.assertTrue(True)
 
 def main(args=None):
