@@ -1,12 +1,13 @@
 import unittest
-import sys
-import os
+import rclpy
 
 import launch
 import launch_ros
 import launch_testing
 import launch_testing.asserts
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+import std_msgs.msg
+import time
+
 
 import pytest
 
@@ -14,11 +15,10 @@ from launch_testing.asserts.assert_exit_codes import EXIT_OK
 
 @pytest.mark.rostest
 def generate_test_description():
-    path_to_test = os.path.dirname(__file__)
 
     test_node = launch_ros.actions.Node(# see https://github.com/ros2/launch_ros/blob/999b208a05998a83378f7ba273b8146ea3eb09d9/launch_testing_ros/test/examples/talker_listener_launch_test.py
-        executable=sys.executable,
-        arguments=[os.path.join(path_to_test, 'integrationtest_unittest.py')],
+        package='ros2_testing_demo_pkg',
+        executable='simple_py_pub_node.py',
         additional_env={'PYTHONUNBUFFERED': '1'},
         parameters=[],
         output='screen',
@@ -26,21 +26,43 @@ def generate_test_description():
 
 
     return launch.LaunchDescription([
-        launch.actions.DeclareLaunchArgument(name='test_binary_dir', # From https://github.com/ros-planning/moveit2/blob/1e1337b46daed0aaa1252b87367c1824f46c9b1a/moveit_ros/moveit_servo/test/launch/servo_launch_test_common.py#L92
-                                             description='Binary directory of package containing test executables'),
-        # other fixture actions
         test_node,
         launch_testing.actions.ReadyToTest(),
     ]), locals()
 
-class TestShutdown(unittest.TestCase):
+class TestReceive(unittest.TestCase):
 
-    def test_shutdown(self, test_node, proc_info):
-        """Test that the executable under test terminates after a finite amount of time."""
-        proc_info.assertWaitForShutdown(process=test_node, timeout=10)
+    @classmethod
+    def setUpClass(cls):
+        rclpy.init()
 
-@launch_testing.post_shutdown_test()
-class TestOutcome(unittest.TestCase):
+    @classmethod
+    def tearDownClass(cls):
+        rclpy.shutdown()
 
-    def test_exit_codes(self, test_node, proc_info):
-        launch_testing.asserts.assertExitCodes(proc_info, process=test_node, allowable_exit_codes=[EXIT_OK])
+    def setUp(self):
+        self.node = rclpy.create_node('test_receiver')
+
+    def tearDown(self):
+        self.node.destroy_node()
+
+    def test_receive(self):
+        msgs = []
+
+        sub = self.node.create_subscription(
+            std_msgs.msg.String,
+            'topic',
+            lambda msg: msgs.append(msg),
+            10
+        )
+        try:
+            end_time = time.time() + 10
+            while time.time() < end_time:
+                rclpy.spin_once(self.node, timeout_sec=0.1)
+                if len(msgs) > 2:
+                    break
+
+            self.assertGreater(len(msgs), 2)
+
+        finally:
+            self.node.destroy_subscription(sub)

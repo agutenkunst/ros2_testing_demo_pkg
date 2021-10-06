@@ -11,5 +11,3 @@ jobs:
         env:
           ROS_DISTRO: foxy
           ROS_REPO: main
-          ADDITIONAL_DEBS: "tree"
-          BEFORE_RUN_TARGET_TEST: "tree -L 2 /root/target_ws/build/ && ls -la /root/target_ws/build/ros2_testing_demo_pkg/integrationtest_unittest.py"
