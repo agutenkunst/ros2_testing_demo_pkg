@@ -10,9 +10,9 @@ import sys
 import unittest
 import rclpy
 
-
-def test_demo(self):
-    self.assertTrue(False)
+class TestSum(unittest.TestCase):
+    def test_demo(self):
+        self.assertTrue(False)
 
 def main(args=None):
     sys.argv = [sys.argv[0]]
